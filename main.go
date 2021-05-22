@@ -34,7 +34,7 @@ func main() {
 	// pass go, collect $200
 	err := cmd.Run()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error running command: %v", err)
+		fmt.Fprintf(os.Stderr, "Error running command: %v\n", err)
 		os.Exit(1)
 	}
 }
