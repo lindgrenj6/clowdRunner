@@ -53,17 +53,20 @@ func dbEnv(cfg *clowder.AppConfig) []string {
 }
 
 func inMemoryEnv(cfg *clowder.AppConfig) []string {
+	// these are always there
 	env := []string{
 		fmt.Sprintf("IN_MEMORY_HOST=%s", cfg.InMemoryDb.Hostname),
 		fmt.Sprintf("IN_MEMORY_PORT=%d", cfg.InMemoryDb.Port),
 	}
 
+	// can be nil
 	if cfg.InMemoryDb.Username != nil {
 		env = append(env, fmt.Sprintf("IN_MEMORY_USER=%s", *cfg.InMemoryDb.Username))
 	}
 
+	// can be nil
 	if cfg.InMemoryDb.Password != nil {
-		fmt.Sprintf("IN_MEMORY_PASSWORD=%s", *cfg.InMemoryDb.Password)
+		env = append(env, fmt.Sprintf("IN_MEMORY_PASSWORD=%s", *cfg.InMemoryDb.Password))
 	}
 
 	return env
@@ -71,8 +74,8 @@ func inMemoryEnv(cfg *clowder.AppConfig) []string {
 
 func kafkaEnv(cfg *clowder.AppConfig) string {
 	brokers := make([]string, len(cfg.Kafka.Brokers))
-	for _, broker := range cfg.Kafka.Brokers {
-		brokers = append(brokers, fmt.Sprintf("%s:%d", broker.Hostname, broker.Port))
+	for i, broker := range cfg.Kafka.Brokers {
+		brokers[i] = fmt.Sprintf("%s:%d", broker.Hostname, broker.Port)
 	}
 
 	return fmt.Sprintf("KAFKA_BROKERS=%s", strings.Join(brokers, ","))
