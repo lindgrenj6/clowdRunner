@@ -28,6 +28,7 @@ func main() {
 	env = append(env, inMemoryEnv(cfg)...)
 	env = append(env, clowdwatchEnv(cfg)...)
 	env = append(env, kafkaEnv(cfg))
+	env = append(env, kafkaTopics(cfg)...)
 
 	cmd.Env = env
 
@@ -79,6 +80,16 @@ func kafkaEnv(cfg *clowder.AppConfig) string {
 	}
 
 	return fmt.Sprintf("KAFKA_BROKERS=%s", strings.Join(brokers, ","))
+}
+
+func kafkaTopics(cfg *clowder.AppConfig) []string {
+	topics := make([]string, len(cfg.Kafka.Topics))
+
+	for i, t := range cfg.Kafka.Topics {
+		topics[i] = fmt.Sprintf("TOPIC_NAME_%v=%v", t.RequestedName, t.Name)
+	}
+
+	return topics
 }
 
 func clowdwatchEnv(cfg *clowder.AppConfig) []string {
