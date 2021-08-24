@@ -75,7 +75,7 @@ func inMemoryEnv(cfg *clowder.AppConfig) []string {
 func kafkaEnv(cfg *clowder.AppConfig) string {
 	brokers := make([]string, len(cfg.Kafka.Brokers))
 	for i, broker := range cfg.Kafka.Brokers {
-		brokers[i] = fmt.Sprintf("%s:%d", broker.Hostname, broker.Port)
+		brokers[i] = fmt.Sprintf("%s:%d", broker.Hostname, *broker.Port)
 	}
 
 	return fmt.Sprintf("KAFKA_BROKERS=%s", strings.Join(brokers, ","))
